@@ -14,13 +14,19 @@
               ></v-text-field>
             </v-col>
           </v-row>
+          <v-row>
+            <v-col cols="12" md="4">
+              <v-text-field
+                v-model="username"
+                label="Username"
+                @blur="$v.username.$touch()"
+                :error-messages="usernameErrors"
+              ></v-text-field>
+            </v-col>
+          </v-row>
           <v-btn class="mr-4" @click="submit">submit</v-btn>
           <v-btn @click="clear">clear</v-btn>
         </v-container>
-        <!-- <p v-if="$v.email.required == false">Bitte Email-Adresse angeben</p>
-        <p v-if="$v.email.required == true && $v.email.email == false">
-          Bitte Email-Adresse richtig Ausfühlen
-        </p> -->
       </v-form>
     </v-container>
   </v-app>
@@ -28,13 +34,14 @@
 
 <script>
 // IMPORT
-import { required, email } from 'vuelidate/lib/validators';
+import { required, email, minLength, alphaNum } from 'vuelidate/lib/validators';
 
 export default {
   name: 'App',
 
   data: () => ({
     email: '',
+    username: '',
   }),
   methods: {
     submit() {
@@ -44,11 +51,14 @@ export default {
 
     clear() {
       this.email = '';
+      this.username = '';
+      this.$v.$reset()
     },
   },
 
   validations: {
     email: { required, email },
+    username: { required, minLength: minLength(8), alphaNum },
   },
 
   computed: {
@@ -57,6 +67,21 @@ export default {
       if (!this.$v.email.$dirty) return errors;
       if (!this.$v.email.email) errors.push('Your email is wrong!');
       if (!this.$v.email.required) errors.push('You need to provide an email!');
+      return errors;
+    },
+
+    usernameErrors() {
+      let errors = [];
+
+      if (!this.$v.username.$dirty) return errors;
+      if (!this.$v.username.alphaNum)
+        errors.push(
+          'Your username should consist only of letters and numbers!'
+        );
+      if (!this.$v.username.minLength)
+        errors.push('Your username should have at least 8 character! ');
+      if (!this.$v.username.required)
+        errors.push('You need to provide a username!');
       return errors;
     },
   },
