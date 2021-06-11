@@ -14,8 +14,8 @@
               ></v-text-field>
             </v-col>
           </v-row>
-          <v-btn class="mr-4">submit</v-btn>
-          <v-btn>clear</v-btn>
+          <v-btn class="mr-4" @click="submit">submit</v-btn>
+          <v-btn @click="clear">clear</v-btn>
         </v-container>
         <!-- <p v-if="$v.email.required == false">Bitte Email-Adresse angeben</p>
         <p v-if="$v.email.required == true && $v.email.email == false">
@@ -36,6 +36,16 @@ export default {
   data: () => ({
     email: '',
   }),
+  methods: {
+    submit() {
+      this.$v.$touch();
+      if (!this.$v.$invalid) console.log('submitted');
+    },
+
+    clear() {
+      this.email = '';
+    },
+  },
 
   validations: {
     email: { required, email },
