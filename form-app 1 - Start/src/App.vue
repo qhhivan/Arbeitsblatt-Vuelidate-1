@@ -17,6 +17,8 @@
 </template>
 
 <script>
+// IMPORT
+import { required, email } from 'vuelidate/lib/validators';
 
 export default {
   name: 'App',
@@ -24,5 +26,9 @@ export default {
   data: () => ({
     email: '',
   }),
+
+  validations: {
+    email: { required, email },
+  },
 };
 </script>
