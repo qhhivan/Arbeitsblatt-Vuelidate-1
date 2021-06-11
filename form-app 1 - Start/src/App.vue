@@ -5,12 +5,21 @@
         <v-container>
           <v-row>
             <v-col cols="12" md="4">
-              <v-text-field v-model="email" label="E-mail"></v-text-field>
+              <v-text-field
+                v-model="email"
+                label="E-mail"
+                @input="$v.email.$touch()"
+                @blur="$v.email.$touch()"
+              ></v-text-field>
             </v-col>
           </v-row>
           <v-btn class="mr-4">submit</v-btn>
           <v-btn>clear</v-btn>
         </v-container>
+        <!-- <p v-if="$v.email.required == false">Bitte Email-Adresse angeben</p>
+        <p v-if="$v.email.required == true && $v.email.email == false">
+          Bitte Email-Adresse richtig Ausfühlen
+        </p> -->
       </v-form>
     </v-container>
   </v-app>
@@ -30,5 +39,20 @@ export default {
   validations: {
     email: { required, email },
   },
+
+  computed: {
+    emailErrors() {
+      let errors = [];
+      if (!this.$v.email.$dirty) return errors;
+      if (!this.$v.email.email) errors.push('Your email is wrong!');
+      if (!this.$v.email.required) errors.push('You need to provide an email!');
+      return errors;
+    },
+  },
 };
 </script>
+<style>
+p {
+  color: red;
+}
+</style>
